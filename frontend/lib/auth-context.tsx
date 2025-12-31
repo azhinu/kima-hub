@@ -32,9 +32,7 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-const publicPaths = ["/login", "/register", "/onboarding", "/sync", "/share"];
-
+const publicPaths = ["/login", "/login/credentials", "/register", "/onboarding", "/sync", "/share", "/auth/callback", "/setup", "/share"];
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState<User | null>(null);
@@ -45,6 +43,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         // Check if user has valid session on mount ONLY
         const checkAuth = async () => {
+            // If we're on the OIDC callback page, or if URL has OIDC callback params, don't check auth yet.
+            // Let the callback page handle the token exchange first
+            if (typeof window !== "undefined") {
+                const urlParams = new URLSearchParams(window.location.search);
+                const hasOidcCallback = urlParams.has("code") || urlParams.has("state");
+
+                // Accept provider-specific callback paths like /auth/callback/:id
+                if ((pathname && pathname.startsWith("/auth/callback")) || hasOidcCallback) {
+                    setIsLoading(false);
+                    return;
+                }
+            }
+
+            // Check for token in URL (from redirect after login)
+            if (typeof window !== "undefined") {
+                const urlParams = new URLSearchParams(window.location.search);
+                const tokenFromUrl = urlParams.get("token");
+                if (tokenFromUrl) {
+                    // Store the token from URL
+                    api.setToken(tokenFromUrl);
+                    // Clean up URL (remove token param)
+                    const cleanUrl = window.location.pathname;
+                    window.history.replaceState({}, "", cleanUrl);
+                }
+            }
+
             try {
                 const userData = await api.getCurrentUser();
                 setUser(userData);

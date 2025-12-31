@@ -147,6 +147,7 @@ model DeviceLinkCode {
   user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+
 model DiscoverExclusion {
   id              String   @id @default(cuid())
   userId          String
@@ -323,6 +324,7 @@ model MoodBucket {
 
   @@unique([trackId, mood])
 }
+
 
 model Notification {
   id        String   @id @default(cuid())
@@ -739,7 +741,10 @@ model User {
   shareLinks             ShareLink[]
   subsonicBookmarks      SubsonicBookmark[]
   subsonicPlayQueue      SubsonicPlayQueue?
+  oidcId                 String? // The OIDC provider id
+  oidcUid                String? // The OIDC-specific user ID
 }
+
 
 model UserDiscoverConfig {
   id               String    @id @default(cuid())

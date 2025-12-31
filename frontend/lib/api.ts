@@ -136,6 +136,7 @@ class ApiClient {
                 localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
             }
         }
+        this.tokenInitialized = true;
     }
 
     // Get refresh token from storage
