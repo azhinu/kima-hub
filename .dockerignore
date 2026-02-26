@@ -10,7 +10,6 @@
 context_portal
 logs
 docs
-scripts
 *.md
 *.log
 **/node_modules

@@ -488,7 +488,7 @@ Environment variables in docker-compose.yml:
 | `CLAP_WORKERS`            | `2`     | Number of analysis workers (1-8)           |
 | `CLAP_THREADS_PER_WORKER` | `1`     | CPU threads per worker (1-4)               |
 | `CLAP_SLEEP_INTERVAL`     | `5`     | Queue poll interval in seconds             |
-
+| `DISABLE_CLAP`              | `false` | Set to `true` to disable CLAP analysis     |  
 ### Usage
 
 The CLAP analyzer runs automatically alongside the main audio analyzer. The vibe button uses CLAP embeddings for finding similar tracks. Text-based vibe search is available at `/api/vibe/search`.
